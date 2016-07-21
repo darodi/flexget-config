@@ -33,6 +33,12 @@ templates:
       torrentz.in: 10 seconds
       torrentz.ch: 10 seconds
       torrentz.eu: 10 seconds
+      torrentz.me: 10 seconds
+      ezrss.it: 1 seconds
+      showrss.info: 1 seconds
+      torlock.eu: 1 seconds
+      torrenticity.com: 1 seconds
+      nyaa.eu: 10 seconds
 
   tv-series:
     series:
@@ -41,34 +47,28 @@ templates:
           quality: hdtv+ <720p
 
       hdtv:
-        - wilfred
         - The Big Bang Theory
         - The Vampire Diaries
-        - cougar town
-        - true blood
+        - Cougar town
         - Greys Anatomy
         - The Simpsons
-        - californication
-        - dexter
-        - futurama
-        - nurse jackie
-        - being human US:
+        - Nurse jackie
+        - Being human US:
             exact: yes
-        - haven
-        - rookie blue
-        - the walking dead
+        - Haven
+        - Rookie blue
+        - The Walking Dead
         - Its Always Sunny in Philadelphia
-        - game of thrones
-        - louie
+        - Game of thrones
+        - Louie
         - New Girl
         - Person of Interest
         - 2 broke girls
         - Suburgatory
         - American Horror Story
-        - raising hope
-        - homeland
-        - threesome
-        - grimm
+        - Homeland
+        - Threesome
+        - Grimm
         - House of Lies
         - Girls:
             exact: yes
@@ -76,13 +76,12 @@ templates:
         - Continuum
         - Baby Daddy
         - Moone Boy
-        - Cuckoo
-        - black mirror
-        - derek
+        - Black mirror
+        - Derek
         - The Mindy Project
-        - seed
+        - Seed
         - Bates Motel
-        - burger land
+        - Burger land
         - Doctor Who
         - Arrested Development
         - Save Me
@@ -90,11 +89,30 @@ templates:
         - Inside Amy Schumer
         - Marvels Agents of S.H.I.E.L.D.
         - Sherlock
+        - House of cards
+        - Gotham
+        - Marvels Agent Carter
+        - 12 Monkeys
+        - Man Seeking Woman
+        - Better Call Saul
+        - The Last Man on Earth
+        - Mr Robot
+        - Scream:
+            exact: yes
+        - Marvels Jessica Jones
+        - Scream Queens
+        - Heroes reborn
+        - Ash vs Evil Dead
+        - The Man In The High Castle
+        - Marvels Daredevil
+        - The X-Files
+      
         
-
       others:
         - Beavis and Butt-Head
 
+
+  tv-output:
     #set:
     #  path: /shares/OpenShare/Videos/Series/{{series_name}}/Season {{series_season|pad(2)}}
     transmission:
@@ -111,21 +129,24 @@ templates:
 
   tv-input:
     inputs:
-      - rss: http://ezrss.it/feed/
-      - rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
-      - rss: http://showrss.info/feeds/all.rss
-      - rss: http://torrentz.in/feed_verified?q=tv
-      #- rss: http://torrentz.eu/feed_verified?q=tv
+      #- rss: http://ezrss.it/feed/
+      #- rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
+      #- rss: https://eztv.ag/ezrss.xml
+      #- rss: http://showrss.info/feeds/schedule/schedule.rss
+      #- rss: http://torrentz.in/feed_verified?q=tv
+      - rss: http://torrentz.eu/feed_verified?q=tv
       #- rss: http://torrentz.ch/feed_verified?q=tv
       #- rss: https://kickass.to/usearch/verified%3A1/?categories[]=tv&rss=1
-      - rss: https://kickass.to/usearch/category%3Atv%20verified%3A1/?rss=1
-      ### burger land
-      - rss: https://kickass.to/usearch/burger%20land/?rss=1
-      ############
+      #- rss: https://kickass.to/usearch/category%3Atv%20verified%3A1/?rss=1
+      - rss: http://extratorrent.cc/rss.xml?cid=8
+      - rss: http://kat.cr/usearch/category:tv%20verified:1/?rss=1
+      #- rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
       #- rss: http://rss.bt-chat.com/?cat=9
+      #- rss: http://rss.bt-chat.com/?group=3&cat=9
     content_size:
       min: 12
       max: 1200
+
 
   drama-input:
     inputs:
@@ -141,6 +162,7 @@ templates:
     #  languages:
     #    - fre
     #    - eng
+
 
   movie:
     manual: yes
@@ -200,21 +222,22 @@ tasks:
 
   tv_feed:
     priority: 2
-    template: [ tv-input, tv-series, torrents ]
+    template: [ tv-input, tv-series, tv-output, torrents ]
 
   tvpremieres_feed:
     priority: 3
     template: [ tv-input, tv-premieres, torrents ]
+    manual: yes
     
   drama_feed:
     priority: 4
-    template: [ drama-input, tv-series, torrents ]
+    template: [ drama-input, tv-series, tv-output, torrents ]
     manual: yes
 
   torrent_feed:
     priority: 5
     template: [ movie, torrents ]
-    movie_queue: yes
+    movie_queue: accept
 
 
   #feed to pull movies from trakt.tv watchlist and add to the movie queue
@@ -225,8 +248,8 @@ tasks:
       - trakt_list:
           username: xxx
           password: xxx
-          api_key: xxx
-          movies: watchlist
+          list: watchlist
+          type: movies
       - imdb_list:
           user_id: xxx
           username: xxx
@@ -234,7 +257,8 @@ tasks:
           list: watchlist
     accept_all: yes
     seen: local  # We don't want accepted movies on this feed to affect actual download feed
-    queue_movies:
+    movie_queue:
+      action: add
       quality: dvdrip+
 
 
@@ -267,7 +291,7 @@ tasks:
     content_size:
       min: 650
       max: 1750
-    movie_queue: yes
+    movie_queue: accept
     transmission:
       username: xxx
       password: xxx
@@ -316,6 +340,7 @@ tasks:
 
     
   manga-traders:
+    manual: yes
     form:
       url: http://www.mangatraders.com/
       username: xxx
@@ -345,12 +370,17 @@ tasks:
     
   manga-nyaa:
     template: no_global
+    manual: yes
     inputs:
       - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=naruto+mangastream
       - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=bleach+mangastream
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=rock+lee+mangastream
+      #- rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=rock+lee+mangastream
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_12&filter=0&term=tokyo+ghoul%3Are
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_12&filter=1&term=assassination+classroom
       - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=fairy+tail+mangastream
-      - rss: http://www.nyaa.se/?page=rss&cats=2_12&term=one+piece
+      - rss: http://www.nyaa.se/?page=rss&cats=2_12&term=one+piece+mangastream
+      - rss: http://www.nyaa.se/?page=rss&cats=2_12&filter=0&term=Hunter+mangastream
+      - rss: http://www.nyaa.se/?page=rss&cats=2_12&filter=2&term=iutoori
     accept_all: yes
     transmission:
       username: xxx
@@ -359,33 +389,30 @@ tasks:
                   
   sort-series:
     manual: yes
+    template: tv-series
     exec:
       on_exit:
-        #phase: chown -R nobody:nogroup /shares/OpenShare/Videos/Series/
-        phase: chgrp -R users /shares/OpenShare/Videos/Series/
+        phase: chown -R nobody:users /shares/OpenShare/Videos/Series/
     find:
       path: /shares/OpenShare/incoming/series/
       regexp: '.*\.(avi|mkv|mp4)$'
       recursive: yes
     accept_all: yes
     seen: local
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    all_series:
-      parse_only: yes
-      identified_by: ep
-    # TVDB doesn't recognise, you must add such exceptions here manually
     series:
-      #- Burger Land
-      - Greys Anatomy
-      - the.vampire.diaries:
+      settings:
+        hdtv:
+          quality: hdtv+ <720p
+          parse_only: yes
           identified_by: ep
-      - the.big.bang.theory:
-          identified_by: ep
+    require_field: series_name
+    metainfo_series: yes
+    #thetvdb_lookup: yes
     move:
       to: /shares/OpenShare/Videos/Series/{{series_name}}/Season {{series_season|pad(2)}}
       # save the file as "Series Name - SxxEyy - Episode Name.ext"
       #filename: '{{ tvdb_series_name }} - {{ series_id }} - {{ tvdb_ep_name }}{{ title | pathext }}' 
+      #filename: '{{ series_name }}-{{ series_id }}-{{ title | pathext }}' 
       along:
         - srt
 
