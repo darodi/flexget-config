@@ -1,0 +1,391 @@
+secrets: secrets.yml
+templates:
+
+  global:
+    regexp:
+      reject:
+        - (s|d)ub(s|bed)?\b: {from: title} # Block any subbed/dubbed/etc videos
+        - \b(duo|tri|quadri|tetra|penta)logy\b: {from: title} # Block series, only accept one at a time
+        - \b3-?D\b: {from: title} # I don't have any 3D displays
+        - \btrailer\b: {from: title} # I've gotten a few trailers that matched as movies. VERY annoying
+        - \bR5\b: {from: title} # The following are poor quality types that somehow got through the quality
+        - \bWEBSCR\b: {from: title} # features usually due to the title including a keyword like "720p" as well
+        - \bscreener\b: {from: title}
+        - \bTS\b: {from: title}
+        - \bCam\b: {from: title}
+        #- \bChi_Jap\b: {from: title} # chinese subbed jdrama
+    
+    # Filter by filenames. Allow multiple video types and rar packs (but note if there is just a
+    # single .rar file it won't be accepted)
+    content_filter:
+      require:
+        - '*.avi'
+        - '*.mkv'
+        - '*.mp4'
+        - '*.r0*'
+        - '*.part0*'
+        - '*.MKV'
+#      reject: [ '*.txt' ]
+
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      bt-chat.com: 5 seconds
+      torrentz.in: 10 seconds
+      torrentz.ch: 10 seconds
+      torrentz.eu: 10 seconds
+
+  tv-series:
+    series:
+      settings:
+        hdtv:
+          quality: hdtv+ <720p
+
+      hdtv:
+        - wilfred
+        - The Big Bang Theory
+        - The Vampire Diaries
+        - cougar town
+        - true blood
+        - Greys Anatomy
+        - The Simpsons
+        - californication
+        - dexter
+        - futurama
+        - nurse jackie
+        - being human US:
+            exact: yes
+        - haven
+        - rookie blue
+        - the walking dead
+        - Its Always Sunny in Philadelphia
+        - game of thrones
+        - louie
+        - New Girl
+        - Person of Interest
+        - 2 broke girls
+        - Suburgatory
+        - American Horror Story
+        - raising hope
+        - homeland
+        - threesome
+        - grimm
+        - House of Lies
+        - Girls:
+            exact: yes
+        - Men at Work
+        - Continuum
+        - Baby Daddy
+        - Moone Boy
+        - Cuckoo
+        - black mirror
+        - derek
+        - The Mindy Project
+        - seed
+        - Bates Motel
+        - burger land
+        - Doctor Who
+        - Arrested Development
+        - Save Me
+        - Under the Dome
+        - Inside Amy Schumer
+        - Marvels Agents of S.H.I.E.L.D.
+        - Sherlock
+        
+
+      others:
+        - Beavis and Butt-Head
+
+    #set:
+    #  path: /shares/OpenShare/Videos/Series/{{series_name}}/Season {{series_season|pad(2)}}
+    transmission:
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+      path: /shares/OpenShare/incoming/series/
+    trakt_add: 
+      username: xxx
+      password: xxx
+      api_key: xxx
+      #type: series
+      list: library
+
+
+  tv-input:
+    inputs:
+      - rss: http://ezrss.it/feed/
+      - rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
+      - rss: http://showrss.info/feeds/all.rss
+      - rss: http://torrentz.in/feed_verified?q=tv
+      #- rss: http://torrentz.eu/feed_verified?q=tv
+      #- rss: http://torrentz.ch/feed_verified?q=tv
+      #- rss: https://kickass.to/usearch/verified%3A1/?categories[]=tv&rss=1
+      - rss: https://kickass.to/usearch/category%3Atv%20verified%3A1/?rss=1
+      ### burger land
+      - rss: https://kickass.to/usearch/burger%20land/?rss=1
+      ############
+      #- rss: http://rss.bt-chat.com/?cat=9
+    content_size:
+      min: 12
+      max: 1200
+
+  drama-input:
+    inputs:
+      - rss: http://www.d-addicts.com/rss.xml
+    urlrewrite:
+      d-addicts:
+        regexp: http://torcache.com/torrent/
+        format: http://zoink.it/torrent/
+    content_size:
+      min: 12
+      max: 1200
+    #subtitles:
+    #  languages:
+    #    - fre
+    #    - eng
+
+  movie:
+    manual: yes
+    inputs:
+      - rlslog: http://www.rlslog.net/category/movies/
+    #  - rss: http://rss.bt-chat.com/?group=230&cat=4
+    #  - rss: http://www.torlock.com/movies/rss.xml              # TorLock (Movies)
+      - rss: http://torrentz.ch/feed_verified?q=movies          # Torrentz (Verified Movies)
+    imdb:
+      min_score: 6.5
+      min_votes: 200
+      reject_genres:
+        - documentary
+      reject_directors:
+        - nm0031976
+    imdb_required: yes
+    quality: dvdrip+
+    torrent_alive:
+      min_seeds: 2
+      reject_for: 10 minutes
+    download: /shares/OpenShare/incoming/torrents/
+
+
+  tv-premieres:
+    series_premiere:
+      quality: hdtv+ <720p
+    thetvdb_lookup: yes
+    require_field: tvdb_genres
+    regexp:
+      reject:
+        - documentary: {from: tvdb_genres}
+        - talk show: {from: tvdb_genres}
+        - game show: {from: tvdb_genres}
+        - reality: {from: tvdb_genres}
+        - children: {from: tvdb_genres}
+        - news: {from: tvdb_genres}
+    transmission:
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+      path: /shares/OpenShare/incoming/premieres/
+      
+
+  torrents:
+    #torrent_alive: 
+    #  min_seeds: 2
+    #  reject_for: 10 minutes
+    private_torrents: no
+    #magnets: no
+    regexp:
+      reject:
+        - '[\W_]+(?:nuked)(?:_|\b)'
+      from: title
+
+######################################################################################
+
+tasks:
+
+  tv_feed:
+    priority: 2
+    template: [ tv-input, tv-series, torrents ]
+
+  tvpremieres_feed:
+    priority: 3
+    template: [ tv-input, tv-premieres, torrents ]
+    
+  drama_feed:
+    priority: 4
+    template: [ drama-input, tv-series, torrents ]
+    manual: yes
+
+  torrent_feed:
+    priority: 5
+    template: [ movie, torrents ]
+    movie_queue: yes
+
+
+  #feed to pull movies from trakt.tv watchlist and add to the movie queue
+  movie_queue_fill:
+    priority: 1
+    interval: 2 hours
+    inputs:
+      - trakt_list:
+          username: xxx
+          password: xxx
+          api_key: xxx
+          movies: watchlist
+      - imdb_list:
+          user_id: xxx
+          username: xxx
+          password: xxx
+          list: watchlist
+    accept_all: yes
+    seen: local  # We don't want accepted movies on this feed to affect actual download feed
+    queue_movies:
+      quality: dvdrip+
+
+
+  #feed that automatically generates an rss feed based on entries from the movie_queue
+  movie_search:
+    priority: 10
+    template: torrents
+    torrent_alive:
+      min_seeds: 2
+      reject_for: 10 minutes
+    discover:
+      what:
+        - emit_movie_queue: yes
+      from:
+        #- kat:
+        #    category: movies
+        #    verified: yes
+        - piratebay:
+            category: movies
+        - isohunt: movies
+        - torrentz: good
+    regexp:
+      reject:
+        - '[\W_]read[\W_]*nfo(?:_|\b)': { from: title }
+        - '[\W_]3-?D(?:BD)?(?:_|\b)': { from: title }
+        - '[\W_](?:heb|kor|swe)sub(?:_|\b)': { from: title }
+        - '[\W_](?:dubbed|pldub|hardcoded|hardsubs?)(?:_|\b)':
+            from: [ title, description ]
+        - '[\W_](italian|spanish)(?:_|\b)': { from: title }
+    content_size:
+      min: 650
+      max: 1750
+    movie_queue: yes
+    transmission:
+      username: xxx
+      password: xxx
+    trakt_add:
+      username: xxx
+      password: xxx
+      api_key: xxx
+      #type: movies
+      list: library
+
+
+  SearchEZTV:
+    template: [ torrents ]
+    discover:
+      what:
+        - mock: 
+          - title: $show
+      from:
+        - search_rss: https://ezrss.it/search/index.php?show_name={{search_term}}&season=$season&show_name_exact=false&quality=hdtv&mode=rss
+      #type: any
+    thetvdb_lookup: yes
+    exists_series:
+      - /shares/OpenShare/incoming/
+    series:
+      settings:
+        hdtv:
+          quality: hdtv+ <720p
+      hdtv:
+        - $show
+    manual: yes
+    transmission:
+      username: xxx
+      password: xxx
+
+
+#  Mangas:
+#    rss: http://www.mangatraders.com/rss/watched/644340
+#    accept_all: yes
+#    jdownloader:
+#      api-mode: flashgot
+#      api: http://127.0.0.1:9666/flashgot
+#      grabber: false
+#      start: true
+#      runcmd: /home/delphine/.jd/jd.sh
+#    manual: yes
+
+    
+  manga-traders:
+    form:
+      url: http://www.mangatraders.com/
+      username: xxx
+      password: xxx
+      userfield: login-user
+      passfield: login-pass
+    rss: http://www.mangatraders.com/rss/watched/644340
+    download: /shares/OpenShare/incoming/manga/
+    manipulate:
+      - title:
+          replace:
+            regexp: '\!\[CDATA\[(.+)\s(.+)\]\]'
+            format: '\1 \2'
+      - filename:
+          from: title
+      - filename:
+          replace:
+            regexp: ':'
+            format: ''
+    accept_all: yes
+    cookies: /root/.flexget/cookies.txt
+#    exec:
+#      on_exit:
+#        phase: /root/.flexget/rename_mangas.sh
+                       
+
+    
+  manga-nyaa:
+    template: no_global
+    inputs:
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=naruto+mangastream
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=bleach+mangastream
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=rock+lee+mangastream
+      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=fairy+tail+mangastream
+      - rss: http://www.nyaa.se/?page=rss&cats=2_12&term=one+piece
+    accept_all: yes
+    transmission:
+      username: xxx
+      password: xxx
+      path: /shares/OpenShare/incoming/manga/
+                  
+  sort-series:
+    manual: yes
+    exec:
+      on_exit:
+        #phase: chown -R nobody:nogroup /shares/OpenShare/Videos/Series/
+        phase: chgrp -R users /shares/OpenShare/Videos/Series/
+    find:
+      path: /shares/OpenShare/incoming/series/
+      regexp: '.*\.(avi|mkv|mp4)$'
+      recursive: yes
+    accept_all: yes
+    seen: local
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    all_series:
+      parse_only: yes
+      identified_by: ep
+    # TVDB doesn't recognise, you must add such exceptions here manually
+    series:
+      #- Burger Land
+      - Greys Anatomy
+      - the.vampire.diaries:
+          identified_by: ep
+      - the.big.bang.theory:
+          identified_by: ep
+    move:
+      to: /shares/OpenShare/Videos/Series/{{series_name}}/Season {{series_season|pad(2)}}
+      # save the file as "Series Name - SxxEyy - Episode Name.ext"
+      #filename: '{{ tvdb_series_name }} - {{ series_id }} - {{ tvdb_ep_name }}{{ title | pathext }}' 
+      along:
+        - srt
+
