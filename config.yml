@@ -43,69 +43,49 @@ templates:
   tv-series:
     series:
       settings:
-        hdtv:
+        hdtv-quality:
           quality: hdtv+ <720p
 
-      hdtv:
+      hdtv-quality:
         - The Big Bang Theory
         - The Vampire Diaries
         - Cougar town
         - Greys Anatomy
         - The Simpsons
         - Nurse jackie
-        - Being human US:
-            exact: yes
         - Haven
-        - Rookie blue
         - The Walking Dead
         - Its Always Sunny in Philadelphia
         - Game of thrones
         - Louie
         - New Girl
-        - Person of Interest
         - 2 broke girls
-        - Suburgatory
-        - American Horror Story
         - Homeland
-        - Threesome
         - Grimm
         - House of Lies
         - Girls:
             exact: yes
         - Men at Work
-        - Continuum
-        - Baby Daddy
         - Moone Boy
         - Black mirror
-        - Derek
         - The Mindy Project
-        - Seed
         - Bates Motel
-        - Burger land
         - Doctor Who
-        - Arrested Development
-        - Save Me
-        - Under the Dome
         - Inside Amy Schumer
         - Marvels Agents of S.H.I.E.L.D.
         - Sherlock
         - House of cards
-        - Gotham
-        - Marvels Agent Carter
-        - 12 Monkeys
         - Man Seeking Woman
         - Better Call Saul
         - The Last Man on Earth
         - Mr Robot
-        - Scream:
-            exact: yes
+        - Scream The TV Series
         - Marvels Jessica Jones
         - Scream Queens
-        - Heroes reborn
         - Ash vs Evil Dead
-        - The Man In The High Castle
         - Marvels Daredevil
         - The X-Files
+        - Slasher
       
         
       others:
@@ -119,12 +99,12 @@ templates:
       username: '{{ secrets.transmission.username }}'
       password: '{{ secrets.transmission.password }}'
       path: /shares/OpenShare/incoming/series/
-    trakt_add: 
-      username: xxx
-      password: xxx
-      api_key: xxx
-      #type: series
-      list: library
+    list_add:
+      - trakt_list: 
+          username: '{{ secrets.trakt.username }}'
+          account: '{{ secrets.trakt.account }}'
+          list: collection
+          type: episodes
 
 
   tv-input:
@@ -158,16 +138,10 @@ templates:
     content_size:
       min: 12
       max: 1200
-    #subtitles:
-    #  languages:
-    #    - fre
-    #    - eng
 
 
   movie:
-    manual: yes
     inputs:
-      - rlslog: http://www.rlslog.net/category/movies/
     #  - rss: http://rss.bt-chat.com/?group=230&cat=4
     #  - rss: http://www.torlock.com/movies/rss.xml              # TorLock (Movies)
       - rss: http://torrentz.ch/feed_verified?q=movies          # Torrentz (Verified Movies)
@@ -237,30 +211,28 @@ tasks:
   torrent_feed:
     priority: 5
     template: [ movie, torrents ]
-    movie_queue: accept
+    #list_add:
+    #  - movie_list: movies
+    manual: yes
 
 
   #feed to pull movies from trakt.tv watchlist and add to the movie queue
   movie_queue_fill:
     priority: 1
     interval: 2 hours
-    inputs:
-      - trakt_list:
-          username: xxx
-          password: xxx
-          list: watchlist
-          type: movies
-      - imdb_list:
-          user_id: xxx
-          username: xxx
-          password: xxx
-          list: watchlist
+    trakt_list:
+      username: '{{ secrets.trakt.username }}'
+      account: '{{ secrets.trakt.account }}'
+      list: watchlist
+      type: movies
+    imdb_list:
+      login: '{{ secrets.imdb.login }}'
+      password: '{{ secrets.imdb.password }}'
+      list: watchlist
     accept_all: yes
     seen: local  # We don't want accepted movies on this feed to affect actual download feed
-    movie_queue:
-      action: add
-      quality: dvdrip+
-
+    list_add:
+      - movie_list: movies
 
   #feed that automatically generates an rss feed based on entries from the movie_queue
   movie_search:
@@ -271,7 +243,7 @@ tasks:
       reject_for: 10 minutes
     discover:
       what:
-        - emit_movie_queue: yes
+        - movie_list: movies
       from:
         #- kat:
         #    category: movies
@@ -280,6 +252,11 @@ tasks:
             category: movies
         - isohunt: movies
         - torrentz: good
+    #list_match:
+    #  from:
+    #    - movie_list: movies
+    quality: dvdrip+
+    imdb_lookup: yes
     regexp:
       reject:
         - '[\W_]read[\W_]*nfo(?:_|\b)': { from: title }
@@ -291,17 +268,15 @@ tasks:
     content_size:
       min: 650
       max: 1750
-    movie_queue: accept
     transmission:
-      username: xxx
-      password: xxx
-    trakt_add:
-      username: xxx
-      password: xxx
-      api_key: xxx
-      #type: movies
-      list: library
-
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
+    list_add:
+      - trakt_list:
+          username: '{{ secrets.trakt.username }}'
+          account: '{{ secrets.trakt.account }}'
+          type: movies
+          list: collection
 
   SearchEZTV:
     template: [ torrents ]
@@ -317,75 +292,15 @@ tasks:
       - /shares/OpenShare/incoming/
     series:
       settings:
-        hdtv:
+        hdtv-quality:
           quality: hdtv+ <720p
-      hdtv:
+      hdtv-quality:
         - $show
     manual: yes
     transmission:
-      username: xxx
-      password: xxx
+      username: '{{ secrets.transmission.username }}'
+      password: '{{ secrets.transmission.password }}'
 
-
-#  Mangas:
-#    rss: http://www.mangatraders.com/rss/watched/644340
-#    accept_all: yes
-#    jdownloader:
-#      api-mode: flashgot
-#      api: http://127.0.0.1:9666/flashgot
-#      grabber: false
-#      start: true
-#      runcmd: /home/delphine/.jd/jd.sh
-#    manual: yes
-
-    
-  manga-traders:
-    manual: yes
-    form:
-      url: http://www.mangatraders.com/
-      username: xxx
-      password: xxx
-      userfield: login-user
-      passfield: login-pass
-    rss: http://www.mangatraders.com/rss/watched/644340
-    download: /shares/OpenShare/incoming/manga/
-    manipulate:
-      - title:
-          replace:
-            regexp: '\!\[CDATA\[(.+)\s(.+)\]\]'
-            format: '\1 \2'
-      - filename:
-          from: title
-      - filename:
-          replace:
-            regexp: ':'
-            format: ''
-    accept_all: yes
-    cookies: /root/.flexget/cookies.txt
-#    exec:
-#      on_exit:
-#        phase: /root/.flexget/rename_mangas.sh
-                       
-
-    
-  manga-nyaa:
-    template: no_global
-    manual: yes
-    inputs:
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=naruto+mangastream
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=bleach+mangastream
-      #- rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=rock+lee+mangastream
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_12&filter=0&term=tokyo+ghoul%3Are
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_12&filter=1&term=assassination+classroom
-      - rss: http://www.nyaa.eu/?page=rss&cats=2_0&term=fairy+tail+mangastream
-      - rss: http://www.nyaa.se/?page=rss&cats=2_12&term=one+piece+mangastream
-      - rss: http://www.nyaa.se/?page=rss&cats=2_12&filter=0&term=Hunter+mangastream
-      - rss: http://www.nyaa.se/?page=rss&cats=2_12&filter=2&term=iutoori
-    accept_all: yes
-    transmission:
-      username: xxx
-      password: xxx
-      path: /shares/OpenShare/incoming/manga/
                   
   sort-series:
     manual: yes
@@ -393,7 +308,7 @@ tasks:
     exec:
       on_exit:
         phase: chown -R nobody:users /shares/OpenShare/Videos/Series/
-    find:
+    filesystem:
       path: /shares/OpenShare/incoming/series/
       regexp: '.*\.(avi|mkv|mp4)$'
       recursive: yes
@@ -401,7 +316,7 @@ tasks:
     seen: local
     series:
       settings:
-        hdtv:
+        hdtv-quality:
           quality: hdtv+ <720p
           parse_only: yes
           identified_by: ep
@@ -415,4 +330,20 @@ tasks:
       #filename: '{{ series_name }}-{{ series_id }}-{{ title | pathext }}' 
       along:
         - srt
+
+  subtitles:
+    filesystem:
+      path: 
+        - /shares/OpenShare/incoming 
+      regexp: '.*\.(avi|mkv|mp4)$'
+      recursive: yes
+    accept_all: yes
+    subliminal:
+      languages:
+        - fr
+      alternatives:
+        - en
+      exact_match: yes
+      providers: [addic7ed, opensubtitles]
+      single: no
 
