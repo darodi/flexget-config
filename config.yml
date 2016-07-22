@@ -39,6 +39,9 @@ templates:
       torlock.eu: 1 seconds
       torrenticity.com: 1 seconds
       nyaa.eu: 10 seconds
+      thepiratebay.se: 5 seconds
+      thepiratebay.org: 5 seconds
+      
 
   tv-series:
     series:
