@@ -1,3 +1,4 @@
+#working with v 2.1.15
 secrets: secrets.yml
 templates:
 
@@ -112,20 +113,11 @@ templates:
 
   tv-input:
     inputs:
-      #- rss: http://ezrss.it/feed/
-      #- rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
       #- rss: https://eztv.ag/ezrss.xml
       #- rss: http://showrss.info/feeds/schedule/schedule.rss
-      #- rss: http://torrentz.in/feed_verified?q=tv
       - rss: http://torrentz.eu/feed_verified?q=tv
       #- rss: http://torrentz.ch/feed_verified?q=tv
-      #- rss: https://kickass.to/usearch/verified%3A1/?categories[]=tv&rss=1
-      #- rss: https://kickass.to/usearch/category%3Atv%20verified%3A1/?rss=1
       - rss: http://extratorrent.cc/rss.xml?cid=8
-      #- rss: http://kat.cr/usearch/category:tv%20verified:1/?rss=1
-      #- rss: http://feeds.feedburner.com/eztv-rss-atom-feeds?format=xml
-      #- rss: http://rss.bt-chat.com/?cat=9
-      #- rss: http://rss.bt-chat.com/?group=3&cat=9
     content_size:
       min: 12
       max: 1200
@@ -145,7 +137,6 @@ templates:
 
   movie:
     inputs:
-    #  - rss: http://rss.bt-chat.com/?group=230&cat=4
     #  - rss: http://www.torlock.com/movies/rss.xml              # TorLock (Movies)
       - rss: http://torrentz.ch/feed_verified?q=movies          # Torrentz (Verified Movies)
     imdb:
@@ -248,9 +239,6 @@ tasks:
       what:
         - movie_list: movies
       from:
-        #- kat:
-        #    category: movies
-        #    verified: yes
         - piratebay:
             category: movies
         - isohunt: movies
@@ -281,6 +269,8 @@ tasks:
           type: movies
           list: collection
 
+
+  #ezrss.it rss not working TODO adapt this task
   SearchEZTV:
     template: [ torrents ]
     discover:
