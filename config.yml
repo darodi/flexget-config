@@ -303,7 +303,8 @@ tasks:
       #filename: '{{ tvdb_series_name }} - {{ series_id }} - {{ tvdb_ep_name }}{{ title | pathext }}' 
       #filename: '{{ series_name }}-{{ series_id }}-{{ title | pathext }}' 
       along:
-        - srt
+        files:
+          - srt
 
   subtitles:
     filesystem:
