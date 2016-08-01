@@ -114,10 +114,9 @@ templates:
   tv-input:
     inputs:
       #- rss: https://eztv.ag/ezrss.xml
-      #- rss: http://showrss.info/feeds/schedule/schedule.rss
-      - rss: http://torrentz.eu/feed_verified?q=tv
-      #- rss: http://torrentz.ch/feed_verified?q=tv
-      - rss: http://extratorrent.cc/rss.xml?cid=8
+      #- rss: https://showrss.info/feeds/schedule/schedule.rss
+      - rss: https://torrentz.eu/feed_verified?q=tv
+      - rss: https://extratorrent.cc/rss.xml?cid=8
     content_size:
       min: 12
       max: 1200
@@ -125,11 +124,11 @@ templates:
 
   drama-input:
     inputs:
-      - rss: http://www.d-addicts.com/rss.xml
+      - rss: https://www.d-addicts.com/rss.xml
     urlrewrite:
       d-addicts:
-        regexp: http://torcache.com/torrent/
-        format: http://zoink.it/torrent/
+        regexp: https://torcache.com/torrent/
+        format: https://zoink.it/torrent/
     content_size:
       min: 12
       max: 1200
@@ -137,8 +136,8 @@ templates:
 
   movie:
     inputs:
-    #  - rss: http://www.torlock.com/movies/rss.xml              # TorLock (Movies)
-      - rss: http://torrentz.ch/feed_verified?q=movies          # Torrentz (Verified Movies)
+    #  - rss: https://www.torlock.com/movies/rss.xml              # TorLock (Movies)
+      - rss: https://torrentz.eu/feed_verified?q=movies          # Torrentz (Verified Movies)
     imdb:
       min_score: 6.5
       min_votes: 200
