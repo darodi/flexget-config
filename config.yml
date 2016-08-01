@@ -121,19 +121,6 @@ templates:
       min: 12
       max: 1200
 
-
-  drama-input:
-    inputs:
-      - rss: https://www.d-addicts.com/rss.xml
-    urlrewrite:
-      d-addicts:
-        regexp: https://torcache.com/torrent/
-        format: https://zoink.it/torrent/
-    content_size:
-      min: 12
-      max: 1200
-
-
   movie:
     inputs:
     #  - rss: https://www.torlock.com/movies/rss.xml              # TorLock (Movies)
@@ -194,11 +181,6 @@ tasks:
   tvpremieres_feed:
     priority: 3
     template: [ tv-input, tv-premieres, torrents ]
-    manual: yes
-    
-  drama_feed:
-    priority: 4
-    template: [ drama-input, tv-series, tv-output, torrents ]
     manual: yes
 
   torrent_feed:
