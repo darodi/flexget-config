@@ -284,10 +284,11 @@ tasks:
         phase: chown -R nobody:users /shares/OpenShare/Videos/Series/
     filesystem:
       path: /shares/OpenShare/incoming/series/
-      regexp: '.*\.(avi|mkv|mp4)$'
+      regexp: '.*\.(avi|mkv|mp4|srt)$'
       recursive: yes
     accept_all: yes
-    seen: local
+    #seen: local
+    disable: seen
     series:
       settings:
         hdtv-quality:
@@ -307,6 +308,7 @@ tasks:
           - srt
 
   subtitles:
+    manual: yes
     filesystem:
       path: 
         - /shares/OpenShare/incoming 
