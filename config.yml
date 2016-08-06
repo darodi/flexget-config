@@ -115,7 +115,7 @@ templates:
     inputs:
       #- rss: https://eztv.ag/ezrss.xml
       #- rss: https://showrss.info/feeds/schedule/schedule.rss
-      - rss: https://torrentz.eu/feed_verified?q=tv
+      #- rss: https://torrentz.eu/feed_verified?q=tv
       - rss: https://extratorrent.cc/rss.xml?cid=8
     content_size:
       min: 12
@@ -124,7 +124,7 @@ templates:
   movie:
     inputs:
     #  - rss: https://www.torlock.com/movies/rss.xml              # TorLock (Movies)
-      - rss: https://torrentz.eu/feed_verified?q=movies          # Torrentz (Verified Movies)
+    #  - rss: https://torrentz.eu/feed_verified?q=movies          # Torrentz (Verified Movies)
     imdb:
       min_score: 6.5
       min_votes: 200
@@ -223,7 +223,7 @@ tasks:
         - piratebay:
             category: movies
         - isohunt: movies
-        - torrentz: good
+        #- torrentz: good
     #list_match:
     #  from:
     #    - movie_list: movies
