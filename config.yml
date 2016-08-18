@@ -122,7 +122,7 @@ templates:
       max: 1200
 
   movie:
-    inputs:
+    #inputs:
     #  - rss: https://www.torlock.com/movies/rss.xml              # TorLock (Movies)
     #  - rss: https://torrentz.eu/feed_verified?q=movies          # Torrentz (Verified Movies)
     imdb:
