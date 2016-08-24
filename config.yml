@@ -1,4 +1,4 @@
-#working with v 2.2.4
+#working with v 2.3.5
 secrets: secrets.yml
 templates:
 
@@ -132,7 +132,8 @@ templates:
         - documentary
       reject_directors:
         - nm0031976
-    imdb_required: yes
+    imdb_lookup: yes
+    require_field: imdb_url
     quality: dvdrip+
     torrent_alive:
       min_seeds: 2
@@ -222,7 +223,6 @@ tasks:
       from:
         - piratebay:
             category: movies
-        - isohunt: movies
         #- torrentz: good
     #list_match:
     #  from:
