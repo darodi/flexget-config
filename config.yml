@@ -1,4 +1,4 @@
-#working with v 2.3.5
+#working with v 2.5.6
 secrets: secrets.yml
 templates:
 
@@ -228,6 +228,8 @@ tasks:
         - piratebay:
             category: movies
         #- torrentz: good
+        - extratorrent:
+            category: movies
     #list_match:
     #  from:
     #    - movie_list: movies
@@ -243,7 +245,7 @@ tasks:
         - '[\W_](italian|spanish)(?:_|\b)': { from: title }
     content_size:
       min: 650
-      max: 1750
+      max: 2000
     transmission:
       username: '{{ secrets.transmission.username }}'
       password: '{{ secrets.transmission.password }}'
@@ -308,7 +310,7 @@ tasks:
       #filename: '{{ tvdb_series_name }} - {{ series_id }} - {{ tvdb_ep_name }}{{ title | pathext }}' 
       #filename: '{{ series_name }}-{{ series_id }}-{{ title | pathext }}' 
       along:
-        files:
+        extensions:
           - srt
 
   subtitles:
