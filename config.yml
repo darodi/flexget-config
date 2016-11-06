@@ -42,6 +42,8 @@ templates:
       nyaa.eu: 10 seconds
       thepiratebay.se: 5 seconds
       thepiratebay.org: 5 seconds
+      rarbg.to: 5 seconds
+      
       
 
   tv-series:
@@ -117,10 +119,12 @@ templates:
 
   tv-input:
     inputs:
-      #- rss: https://eztv.ag/ezrss.xml
+      - rss: https://eztv.ag/ezrss.xml
       #- rss: https://showrss.info/feeds/schedule/schedule.rss
       #- rss: https://torrentz.eu/feed_verified?q=tv
       - rss: https://extratorrent.cc/rss.xml?cid=8
+      - rss: https://rarbg.to/rss.php??category=1;18;41
+      #- rss: https://limetorrents.ukbypass.win/rss/20/
     content_size:
       min: 12
       max: 1200
@@ -178,7 +182,34 @@ templates:
 ######################################################################################
 
 tasks:
-
+  series_search:
+    manual: yes
+    disable: seen
+    
+    series:
+      settings:
+        hdtv-quality:
+          quality: hdtv+ <720p
+          identified_by: ep
+      hdtv-quality:
+        - Scream Queens:
+            begin: S02E04
+    
+    template:
+      #- tv-series
+      - tv-output
+      - torrents
+    discover:
+      release_estimations: ignore
+      interval: 15 minutes
+      what:
+        - next_series_episodes:
+            from_start: yes
+      from:
+        - piratebay: yes
+        - rarbg:
+           category: [18]
+  
   tv_feed:
     priority: 2
     template: [ tv-input, tv-series, tv-output, torrents ]
@@ -222,6 +253,8 @@ tasks:
       min_seeds: 2
       reject_for: 10 minutes
     discover:
+      release_estimations: ignore
+      interval: 15 minutes
       what:
         - movie_list: movies
       from:
@@ -230,6 +263,8 @@ tasks:
         #- torrentz: good
         - extratorrent:
             category: movies
+        - rarbg:
+            category: [14, 17]
     #list_match:
     #  from:
     #    - movie_list: movies
@@ -312,21 +347,4 @@ tasks:
       along:
         extensions:
           - srt
-
-  subtitles:
-    manual: yes
-    filesystem:
-      path: 
-        - /shares/OpenShare/incoming 
-      regexp: '.*\.(avi|mkv|mp4)$'
-      recursive: yes
-    accept_all: yes
-    subliminal:
-      languages:
-        - fr
-      alternatives:
-        - en
-      exact_match: yes
-      providers: [addic7ed, opensubtitles]
-      single: no
 
