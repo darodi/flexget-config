@@ -353,3 +353,12 @@ tasks:
         extensions:
           - srt
 
+  seed_series_db:
+    # The find plugin will find all of your existing episodes
+    find:
+      regexp: .*(avi|mkv|mp4)$
+      path: /shares/OpenShare/Videos/Series
+      recursive: yes
+    template: tv-series
+    # We use the manual plugin so that this task only runs when explicitly called
+    manual: yes
