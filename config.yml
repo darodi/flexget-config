@@ -355,7 +355,7 @@ tasks:
 
   seed_series_db:
     # The find plugin will find all of your existing episodes
-    find:
+    filesystem:
       regexp: .*(avi|mkv|mp4)$
       path: /shares/OpenShare/Videos/Series
       recursive: yes
