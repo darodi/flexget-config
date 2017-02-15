@@ -99,6 +99,7 @@ templates:
         - Fleabag
         - westworld
         - People of Earth
+        - Legion
       
         
       others:
@@ -209,6 +210,7 @@ tasks:
         - next_series_episodes:
             from_start: yes
       from:
+        - search_rss: https://zooqle.com/search?q={{search_term}}&fmt=rss 
         - piratebay: yes
         - rarbg:
            category: [18]
@@ -328,7 +330,7 @@ tasks:
         phase: chown -R nobody:users /shares/OpenShare/Videos/Series/
     filesystem:
       path: /shares/OpenShare/incoming/series/
-      regexp: '.*\.(avi|mkv|mp4|srt)$'
+      regexp: '.*\.(avi|mkv|mp4)$'
       recursive: yes
     accept_all: yes
     #seen: local
