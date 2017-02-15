@@ -101,10 +101,6 @@ templates:
         - People of Earth
         - Legion
       
-        
-      others:
-        - Beavis and Butt-Head
-
 
   tv-output:
     #set:
