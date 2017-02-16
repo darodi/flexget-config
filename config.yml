@@ -1,5 +1,5 @@
-#working with v 2.5.6
-secrets: secrets.yml
+#working with v 2.9.23
+variables: secrets.yml
 templates:
 
   global:
@@ -106,13 +106,13 @@ templates:
     #set:
     #  path: /shares/OpenShare/Videos/Series/{{series_name}}/Season {{series_season|pad(2)}}
     transmission:
-      username: '{{ secrets.transmission.username }}'
-      password: '{{ secrets.transmission.password }}'
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
       path: /shares/OpenShare/incoming/series/
     list_add:
       - trakt_list: 
-          username: '{{ secrets.trakt.username }}'
-          account: '{{ secrets.trakt.account }}'
+          username: '{? trakt.username ?}'
+          account: '{? trakt.account ?}'
           list: collection
           type: episodes
 
@@ -163,8 +163,8 @@ templates:
         - children: {from: tvdb_genres}
         - news: {from: tvdb_genres}
     transmission:
-      username: '{{ secrets.transmission.username }}'
-      password: '{{ secrets.transmission.password }}'
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
       path: /shares/OpenShare/incoming/premieres/
       
 
@@ -209,7 +209,7 @@ tasks:
         - search_rss: https://zooqle.com/search?q={{search_term}}&fmt=rss 
         - piratebay: yes
         - rarbg:
-           category: [18]
+            category: [18]
   
   tv_feed:
     priority: 2
@@ -233,13 +233,13 @@ tasks:
     priority: 1
     interval: 2 hours
     trakt_list:
-      username: '{{ secrets.trakt.username }}'
-      account: '{{ secrets.trakt.account }}'
+      username: '{? trakt.username ?}'
+      account: '{? trakt.account ?}'
       list: watchlist
       type: movies
     imdb_list:
-      login: '{{ secrets.imdb.login }}'
-      password: '{{ secrets.imdb.password }}'
+      login: '{? imdb.login ?}'
+      password: '{? imdb.password ?}'
       list: watchlist
     accept_all: yes
     seen: local  # We don't want accepted movies on this feed to affect actual download feed
@@ -283,12 +283,12 @@ tasks:
       min: 650
       max: 2000
     transmission:
-      username: '{{ secrets.transmission.username }}'
-      password: '{{ secrets.transmission.password }}'
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
     list_add:
       - trakt_list:
-          username: '{{ secrets.trakt.username }}'
-          account: '{{ secrets.trakt.account }}'
+          username: '{? trakt.username ?}'
+          account: '{? trakt.account ?}'
           type: movies
           list: collection
 
@@ -314,8 +314,8 @@ tasks:
         - $show
     manual: yes
     transmission:
-      username: '{{ secrets.transmission.username }}'
-      password: '{{ secrets.transmission.password }}'
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
 
                   
   sort-series:
