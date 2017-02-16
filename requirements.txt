@@ -1,0 +1,2 @@
+flexget == 2.5.6
+transmissionrpc == 0.11
